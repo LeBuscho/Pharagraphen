@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zufällige Deutsche Paragraphen</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 20px;
+  }
+  h1 {
+    font-size: 2.4rem;
+    margin-bottom: 10px;
+    text-align: center;
+    background: linear-gradient(90deg, #00d4ff, #7b2cbf, #ff6b6b);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientShift 4s ease infinite;
+  }
+  @keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  button {
+    background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+    background-size: 200% 200%;
+    color: #fff;
+    border: none;
+    padding: 16px 36px;
+    font-size: 1.15rem;
+    font-weight: bold;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s;
+    margin-bottom: 30px;
+    position: relative;
+    overflow: hidden;
+    animation: buttonGlow 2.5s ease-in-out infinite alternate;
+  }
+  @keyframes buttonGlow {
+    from { box-shadow: 0 0 15px rgba(0, 212, 255, 0.4); }
+    to { box-shadow: 0 0 30px rgba(123, 44, 191, 0.7); }
+  }
+  button:hover {
+    transform: scale(1.08) translateY(-2px);
+    box-shadow: 0 0 40px rgba(0, 212, 255, 0.8);
+  }
+  button:active {
+    transform: scale(0.95);
+  }
+  button::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.5s;
+  }
+  button:hover::before {
+    left: 100%;
+  }
+  .card {
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 720px;
+    width: 100%;
+    animation: fadeIn 0.5s ease-out;
+    min-height: 200px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    transition: transform 0.3s;
+  }
+  .card:hover {
+    transform: translateY(-5px);
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .gesetz {
+    color: #00d4ff;
+    font-size: 0.9rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .nummer {
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+  }
+  .text {
+    line-height: 1.6;
+    font-size: 1.05rem;
+    color: #e0e0e0;
+  }
+  .hint {
+    margin-top: 25px;
+    color: #777;
+    font-size: 0.85rem;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+  <h1>⚖️ Zufällige Deutsche Paragraphen</h1>
+  <p class="subtitle">Wichtige Paragraphen aus deutschen Gesetzbüchern</p>
+  <button onclick="showRandom()">Neuen Paragraphen zeigen</button>
+  <div class="card" id="card">
+    <div class="gesetz" id="gesetz">Klicke auf den Button</div>
+    <div class="nummer" id="nummer"></div>
+    <div class="text" id="text">Hier erscheint ein zufälliger Paragraph aus den deutschen Gesetzen.</div>
+  </div>
+  <p class="hint">Über 240 wichtige Paragraphen aus Grundgesetz, BGB, StGB, StPO, ZPO und weiteren Gesetzen.<br>Klicke den Button für einen zufälligen Paragraphen – mit coolen Animationen!</p>
+
+<script>
+const paragraphen = [
+  { gesetz: "Grundgesetz (GG)", nummer: "Art. 1 Abs. 1", text: "Die Würde des Menschen ist unantastbar. Sie zu achten und zu schützen ist Verpflichtung aller staatlichen Gewalt." },
+  { gesetz: "Grundgesetz (GG)", nummer: "Art. 1 Abs. 3", text: "Die nachfolgenden Grundrechte binden Gesetzgebung, vollziehende Gewalt und Rechtsprechung als unmittelbar geltendes Recht." },
+  { gesetz: "Grundgesetz (GG)", nummer: "Art. 2 Abs. 1", text: "Jeder hat das Recht auf die freie Entfaltung seiner Persönlichkeit, soweit er nicht die Rechte anderer verletzt und nicht gegen die verfassungsmäßige Ordnung oder das Sittengesetz verstößt." },
+  { gesetz: "Grundgesetz (GG)", nummer: "Art. 2 Abs. 2", text: "Jeder hat das Recht auf Leben und körperliche Unversehrtheit. Die Freiheit der Person ist unverletzlich." },
+  { gesetz: "Grundgesetz (GG)", nummer: "Art. 3 Abs. 1", text: "Alle Menschen sind vor dem Gesetz gleich." },
+  { gesetz: "Grundgesetz (GG)", nummer: "Art. 3 Abs. 2", text: "Männer und Frauen sind gleichberechtigt. Der Staat fördert die tatsächliche Durchsetzung der Gleichberechtigung von Frauen und Männern und wirkt auf die Beseitigung bestehender Nachteile hin." },
+  { gesetz: "Grundgesetz (GG)", nummer: "Art. 3 Abs. 3", text: "Niemand darf wegen seines Geschlechtes, seiner Abstammung, seiner Rasse, seiner Sprache, seiner Heimat und Herkunft, seines Glaubens, seiner religiösen oder politischen Anschauungen benachteiligt oder bevorzugt werden. Niemand darf wegen seiner Behinderung benachteiligt werden." },
+  { gesetz: "Grundgesetz (GG)", nummer: "Art. 4 Abs. 1", text: "Die Freiheit des Glaubens, des Gewissens und die Freiheit des religiösen und weltanschaulichen Bekenntnisses sind unverletzlich." },
+  { gesetz: "Grundgesetz (GG)", nummer: "Art. 5 Abs. 1", text: "Jeder hat das Recht, seine Meinung in Wort, Schrift und Bild frei zu äußern und zu verbreiten und sich aus allgemein zugänglichen Quellen ungehindert zu unterrichten." },
+  { gesetz: "Grundgesetz (GG)", nummer: "Art. 5 Abs. 3", text: "Kunst und Wissenschaft, Forschung und Lehre sind frei. Die Freiheit der Lehre entbindet nicht von der Treue zur Verfassung." },
+  { gesetz: "Grundgesetz (GG)", nummer: "Art. 6 Abs. 1", text: "Ehe und Familie stehen unter dem besonderen Schutze der staatlichen Ordnung." },
+  { gesetz: "Grundgesetz (GG)", nummer: "Art. 8 Abs. 1", text: "Alle Deutschen haben das Recht, sich ohne Anmeldung oder Erlaubnis friedlich und ohne Waffen zu versammeln." },
+  { gesetz: "Grundgesetz (GG)", nummer: "Art. 10 Abs. 1", text: "Das Briefgeheimnis sowie das Post- und Fernmeldegeheimnis sind unverletzlich." },
+  { gesetz: "Grundgesetz (GG)", nummer: "Art. 11 Abs. 1", text: "Alle Deutschen genießen Freizügigkeit im ganzen Bundesgebiet." },
+  { gesetz: "Grundgesetz (GG)", nummer: "Art. 12 Abs. 1", text: "Alle Deutschen haben das Recht, Beruf, Arbeitsplatz und Ausbildungsstätte frei zu wählen." },
+  { gesetz: "Grundgesetz (GG)", nummer: "Art. 13 Abs. 1", text: "Die Wohnung ist unverletzlich." },
+  { gesetz: "Grundgesetz (GG)", nummer: "Art. 14 Abs. 1", text: "Das Eigentum und das Erbrecht werden gewährleistet. Inhalt und Schranken werden durch die Gesetze bestimmt." },
+  { gesetz: "Grundgesetz (GG)", nummer: "Art. 14 Abs. 2", text: "Eigentum verpflichtet. Sein Gebrauch soll zugleich dem Wohle der Allgemeinheit dienen." },
+  { gesetz: "Grundgesetz (GG)", nummer: "Art. 19 Abs. 4", text: "Wird jemand durch die öffentliche Gewalt in seinen Rechten verletzt, so steht ihm der Rechtsweg offen." },
+  { gesetz: "Grundgesetz (GG)", nummer: "Art. 20 Abs. 1", text: "Die Bundesrepublik Deutschland ist ein demokratischer und sozialer Bundesstaat." },
+  { gesetz: "Grundgesetz (GG)", nummer: "Art. 20 Abs. 3", text: "Die Gesetzgebung ist an die verfassungsmäßige Ordnung, die vollziehende Gewalt und die Rechtsprechung sind an Gesetz und Recht gebunden." },
+  { gesetz: "Grundgesetz (GG)", nummer: "Art. 20 Abs. 4", text: "Gegen jeden, der es unternimmt, diese Ordnung zu beseitigen, haben alle Deutschen das Recht zum Widerstand, wenn andere Abhilfe nicht möglich ist." },
+  { gesetz: "Grundgesetz (GG)", nummer: "Art. 20a", text: "Der Staat schützt auch in Verantwortung für die künftigen Generationen die natürlichen Lebensgrundlagen und die Tiere im Rahmen der verfassungsmäßigen Ordnung durch die Gesetzgebung und nach Maßgabe von Gesetz und Recht durch die vollziehende Gewalt und die Rechtsprechung." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 1", text: "Die Rechtsfähigkeit des Menschen beginnt mit der Vollendung der Geburt." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 2", text: "Die Volljährigkeit tritt mit der Vollendung des 18. Lebensjahres ein." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 90", text: "Sachen im Sinne des Gesetzes sind nur körperliche Gegenstände." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 104", text: "Geschäftsunfähig ist: 1. wer nicht das siebente Lebensjahr vollendet hat, 2. wer sich in einem die freie Willensbestimmung ausschließenden Zustand krankhafter Störung der Geistestätigkeit befindet, sofern nicht der Zustand seiner Natur nach ein vorübergehender ist." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 106", text: "Ein Minderjähriger, der das siebente Lebensjahr vollendet hat, ist nach Maßgabe der §§ 107 bis 113 in der Geschäftsfähigkeit beschränkt." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 134", text: "Ein Rechtsgeschäft, das gegen ein gesetzliches Verbot verstößt, ist nichtig, wenn sich nicht aus dem Gesetz ein anderes ergibt." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 138 Abs. 1", text: "Ein Rechtsgeschäft, das gegen die guten Sitten verstößt, ist nichtig." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 145", text: "Wer einem anderen die Schließung eines Vertrags anträgt, ist an den Antrag gebunden, es sei denn, dass er die Gebundenheit ausgeschlossen hat." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 195", text: "Die regelmäßige Verjährungsfrist beträgt drei Jahre." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 241 Abs. 1", text: "Kraft des Schuldverhältnisses ist der Gläubiger berechtigt, von dem Schuldner eine Leistung zu fordern. Die Leistung kann auch in einem Unterlassen bestehen." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 242", text: "Der Schuldner ist verpflichtet, die Leistung so zu bewirken, wie Treu und Glauben mit Rücksicht auf die Verkehrssitte es erfordern." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 249 Abs. 1", text: "Wer zum Schadensersatz verpflichtet ist, hat den Zustand herzustellen, der bestehen würde, wenn der zum Ersatz verpflichtende Umstand nicht eingetreten wäre." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 280 Abs. 1", text: "Verletzt der Schuldner eine Pflicht aus dem Schuldverhältnis, so kann der Gläubiger Ersatz des hierdurch entstehenden Schadens verlangen. Dies gilt nicht, wenn der Schuldner die Pflichtverletzung nicht zu vertreten hat." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 311 Abs. 1", text: "Zur Begründung eines Schuldverhältnisses durch Rechtsgeschäft sowie zur Änderung des Inhalts eines Schuldverhältnisses ist ein Vertrag zwischen den Beteiligten erforderlich, soweit nicht das Gesetz ein anderes vorschreibt." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 433 Abs. 1", text: "Durch den Kaufvertrag wird der Verkäufer einer Sache verpflichtet, dem Käufer die Sache zu übergeben und das Eigentum an der Sache zu verschaffen. Der Verkäufer hat dem Käufer die Sache frei von Sach- und Rechtsmängeln zu verschaffen." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 535 Abs. 1", text: "Durch den Mietvertrag wird der Vermieter verpflichtet, dem Mieter den Gebrauch der Mietsache während der Mietzeit zu gewähren." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 611 Abs. 1", text: "Durch den Dienstvertrag wird derjenige, welcher Dienste zusagt, zur Leistung der versprochenen Dienste, der andere Teil zur Gewährung der vereinbarten Vergütung verpflichtet." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 631 Abs. 1", text: "Durch den Werkvertrag wird der Unternehmer zur Herstellung des versprochenen Werkes, der Besteller zur Entrichtung der vereinbarten Vergütung verpflichtet." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 823 Abs. 1", text: "Wer vorsätzlich oder fahrlässig das Leben, den Körper, die Gesundheit, die Freiheit, das Eigentum oder ein sonstiges Recht eines anderen widerrechtlich verletzt, ist dem anderen zum Ersatz des daraus entstehenden Schadens verpflichtet." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 854 Abs. 1", text: "Der Besitz einer Sache wird durch die Erlangung der tatsächlichen Gewalt über die Sache erworben." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 903", text: "Der Eigentümer einer Sache kann, soweit nicht das Gesetz oder Rechte Dritter entgegenstehen, mit der Sache nach Belieben verfahren und andere von jeder Einwirkung ausschließen." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 929", text: "Zur Übertragung des Eigentums an einer beweglichen Sache ist erforderlich, dass der Eigentümer die Sache dem Erwerber übergibt und beide darüber einig sind, dass das Eigentum übergehen soll." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 985", text: "Der Eigentümer kann von dem Besitzer die Herausgabe der Sache verlangen." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 1", text: "Eine Tat kann nur bestraft werden, wenn die Strafbarkeit gesetzlich bestimmt war, bevor die Tat begangen wurde." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 12", text: "Verbrechen sind rechtswidrige Taten, die im Mindestmaß mit Freiheitsstrafe von einem Jahr oder darüber bedroht sind. Vergehen sind rechtswidrige Taten, die im Mindestmaß mit einer geringeren Freiheitsstrafe oder die mit Geldstrafe bedroht sind." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 13", text: "Wer es unterlässt, einen Erfolg abzuwenden, der zum Tatbestand eines Strafgesetzes gehört, ist nach diesem Gesetz nur dann strafbar, wenn er rechtlich dafür einzustehen hat, dass der Erfolg nicht eintritt, und wenn das Unterlassen der Verwirklichung des gesetzlichen Tatbestandes durch ein Tun entspricht." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 15", text: "Strafbar ist nur vorsätzliches Handeln, wenn nicht das Gesetz fahrlässiges Handeln ausdrücklich mit Strafe bedroht." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 16", text: "Wer bei Begehung der Tat einen Umstand nicht kennt, der zum gesetzlichen Tatbestand gehört, handelt nicht vorsätzlich. Die Strafbarkeit wegen fahrlässiger Begehung bleibt unberührt." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 17", text: "Fehlt dem Täter bei Begehung der Tat die Einsicht, Unrecht zu tun, so handelt er ohne Schuld, wenn er diesen Irrtum nicht vermeiden konnte." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 19", text: "Schuldunfähig ist, wer bei Begehung der Tat noch nicht vierzehn Jahre alt ist." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 20", text: "Ohne Schuld handelt, wer bei Begehung der Tat wegen einer krankhaften seelischen Störung, wegen einer tiefgreifenden Bewusstseinsstörung oder wegen einer Intelligenzminderung oder einer schweren anderen seelischen Störung unfähig ist, das Unrecht der Tat einzusehen oder nach dieser Einsicht zu handeln." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 22", text: "Eine Straftat versucht, wer nach seiner Vorstellung von der Tat zur Verwirklichung des Tatbestandes unmittelbar ansetzt." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 23", text: "Der Versuch eines Verbrechens ist stets strafbar, der Versuch eines Vergehens nur dann, wenn das Gesetz es ausdrücklich bestimmt." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 24", text: "Wegen Versuchs wird nicht bestraft, wer freiwillig die weitere Ausführung der Tat aufgibt oder deren Vollendung verhindert." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 25", text: "Als Täter wird bestraft, wer die Straftat selbst oder durch einen anderen begeht. Begehen mehrere die Straftat gemeinschaftlich, so wird jeder als Täter bestraft (Mittäter)." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 26", text: "Als Anstifter wird gleich einem Täter bestraft, wer vorsätzlich einen anderen zu dessen vorsätzlich begangener rechtswidriger Tat bestimmt hat." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 27", text: "Als Gehilfe wird bestraft, wer vorsätzlich einem anderen zu dessen vorsätzlich begangener rechtswidriger Tat Hilfe geleistet hat." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 32", text: "Wer eine Tat begeht, die durch Notwehr geboten ist, handelt nicht rechtswidrig. Notwehr ist die Verteidigung, die erforderlich ist, um einen gegenwärtigen rechtswidrigen Angriff von sich oder einem anderen abzuwenden." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 34", text: "Wer in einer gegenwärtigen, nicht anders abwendbaren Gefahr für Leben, Leib, Freiheit, Ehre, Eigentum oder ein anderes Rechtsgut eine Tat begeht, um die Gefahr von sich oder einem anderen abzuwenden, handelt nicht rechtswidrig, wenn bei Abwägung der widerstreitenden Interessen das geschützte Interesse das beeinträchtigte wesentlich überwiegt." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 38", text: "Die Freiheitsstrafe ist zeitig, wenn das Gesetz nicht lebenslange Freiheitsstrafe androht. Das Höchstmaß der zeitigen Freiheitsstrafe ist fünfzehn Jahre, ihr Mindestmaß ein Monat." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 40", text: "Die Geldstrafe wird in Tagessätzen verhängt. Sie beträgt mindestens fünf und, wenn das Gesetz nichts anderes bestimmt, höchstens dreihundertsechzig volle Tagessätze." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 46", text: "Die Schuld des Täters ist Grundlage für die Zumessung der Strafe. Die Wirkungen, die von der Strafe für das künftige Leben des Täters in der Gesellschaft zu erwarten sind, sind zu berücksichtigen." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 56", text: "Bei der Verurteilung zu Freiheitsstrafe von nicht mehr als einem Jahr setzt das Gericht die Vollstreckung der Strafe zur Bewährung aus, wenn zu erwarten ist, dass der Verurteilte sich schon die Verurteilung zur Warnung dienen lassen und künftig auch ohne die Einwirkung des Strafvollzugs keine Straftaten mehr begehen wird." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 78", text: "Die Verjährung schließt die Ahndung der Tat und die Anordnung von Maßnahmen (§ 11 Abs. 1 Nr. 8) aus. § 76a Abs. 2 bleibt unberührt." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 185", text: "Die Beleidigung wird mit Freiheitsstrafe bis zu einem Jahr oder mit Geldstrafe und, wenn die Beleidigung öffentlich, in einer Versammlung, durch Verbreiten eines Inhalts (§ 11 Abs. 3) oder mittels einer Tätlichkeit begangen wird, mit Freiheitsstrafe bis zu zwei Jahren oder mit Geldstrafe bestraft." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 186", text: "Wer in Beziehung auf einen anderen eine Tatsache behauptet oder verbreitet, welche denselben verächtlich zu machen oder in der öffentlichen Meinung herabzuwürdigen geeignet ist, wird, wenn nicht diese Tatsache erweislich wahr ist, mit Freiheitsstrafe bis zu einem Jahr oder mit Geldstrafe und, wenn die Tat öffentlich oder durch Verbreiten von Schriften begangen ist, mit Freiheitsstrafe bis zu zwei Jahren oder mit Geldstrafe bestraft." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 211", text: "Mörder ist, wer aus Mordlust, zur Befriedigung des Geschlechtstriebs, aus Habgier oder sonst aus niedrigen Beweggründen, heimtückisch oder grausam oder mit gemeingefährlichen Mitteln oder um eine andere Straftat zu ermöglichen oder zu verdecken, einen Menschen tötet." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 212", text: "Wer einen Menschen tötet, ohne Mörder zu sein, wird als Totschläger mit Freiheitsstrafe nicht unter fünf Jahren bestraft." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 223", text: "Wer eine andere Person körperlich misshandelt oder an der Gesundheit schädigt, wird mit Freiheitsstrafe bis zu fünf Jahren oder mit Geldstrafe bestraft." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 224", text: "Wer die Körperverletzung mittels einer Waffe oder eines anderen gefährlichen Werkzeugs, mittels eines hinterlistigen Überfalls, mit einem anderen Beteiligten gemeinschaftlich oder mittels einer das Leben gefährdenden Behandlung begeht, wird mit Freiheitsstrafe von sechs Monaten bis zu zehn Jahren, in minder schweren Fällen mit Freiheitsstrafe von drei Monaten bis zu fünf Jahren bestraft." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 242", text: "Wer eine fremde bewegliche Sache einem anderen in der Absicht wegnimmt, die Sache sich oder einem Dritten rechtswidrig zuzueignen, wird mit Freiheitsstrafe bis zu fünf Jahren oder mit Geldstrafe bestraft." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 243", text: "In besonders schweren Fällen wird der Diebstahl mit Freiheitsstrafe von drei Monaten bis zu zehn Jahren bestraft. Ein besonders schwerer Fall liegt in der Regel vor, wenn der Täter zur Ausführung der Tat in ein Gebäude, einen Dienst- oder Geschäftsraum oder in einen anderen umschlossenen Raum einbricht oder einsteigt." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 246", text: "Wer eine fremde bewegliche Sache sich oder einem Dritten rechtswidrig zueignet, wird mit Freiheitsstrafe bis zu drei Jahren oder mit Geldstrafe bestraft, wenn die Tat nicht in anderen Vorschriften mit schwererer Strafe bedroht ist." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 249", text: "Wer mit Gewalt gegen eine Person oder unter Anwendung von Drohungen mit gegenwärtiger Gefahr für Leib oder Leben eine fremde bewegliche Sache einem anderen in der Absicht wegnimmt, die Sache sich oder einem Dritten rechtswidrig zuzueignen, wird mit Freiheitsstrafe nicht unter einem Jahr bestraft." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 253", text: "Wer einen Menschen rechtswidrig mit Gewalt oder durch Drohung mit einem empfindlichen Übel zu einer Handlung, Duldung oder Unterlassung nötigt und dadurch dem Vermögen des Genötigten oder eines anderen Nachteil zufügt, um sich oder einen Dritten zu Unrecht zu bereichern, wird mit Freiheitsstrafe bis zu fünf Jahren oder mit Geldstrafe bestraft." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 263", text: "Wer in der Absicht, sich oder einem Dritten einen rechtswidrigen Vermögensvorteil zu verschaffen, das Vermögen eines anderen dadurch beschädigt, dass er durch Vorspiegelung falscher oder durch Entstellung oder Unterdrückung wahrer Tatsachen einen Irrtum erregt oder unterhält, wird mit Freiheitsstrafe bis zu fünf Jahren oder mit Geldstrafe bestraft." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 267", text: "Wer zur Täuschung im Rechtsverkehr eine unechte Urkunde herstellt, eine echte Urkunde verfälscht oder eine unechte oder verfälschte Urkunde gebraucht, wird mit Freiheitsstrafe bis zu fünf Jahren oder mit Geldstrafe bestraft." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 303", text: "Wer rechtswidrig eine fremde Sache beschädigt oder zerstört, wird mit Freiheitsstrafe bis zu zwei Jahren oder mit Geldstrafe bestraft." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 315c", text: "Wer im Straßenverkehr ein Fahrzeug führt, obwohl er infolge des Genusses alkoholischer Getränke oder anderer berauschender Mittel nicht in der Lage ist, das Fahrzeug sicher zu führen, oder grob verkehrswidrig und rücksichtslos die Vorfahrt nicht beachtet und dadurch Leib oder Leben eines anderen Menschen oder fremde Sachen von bedeutendem Wert gefährdet, wird mit Freiheitsstrafe bis zu fünf Jahren oder mit Geldstrafe bestraft." },
+  { gesetz: "Strafprozessordnung (StPO)", nummer: "§ 136", text: "Bei Beginn der ersten Vernehmung ist dem Beschuldigten zu eröffnen, welche Tat ihm zur Last gelegt wird und welche Strafvorschriften in Betracht kommen. Er ist darauf hinzuweisen, dass es ihm freistehe, sich zu der Beschuldigung zu äußern oder nicht zur Sache auszusagen und jederzeit, auch schon vor seiner Vernehmung, einen von ihm zu wählenden Verteidiger zu befragen." },
+  { gesetz: "Strafprozessordnung (StPO)", nummer: "§ 137", text: "Der Beschuldigte kann sich in jeder Lage des Verfahrens des Beistandes eines Verteidigers bedienen." },
+  { gesetz: "Strafprozessordnung (StPO)", nummer: "§ 152", text: "Zur Erhebung der öffentlichen Klage ist die Staatsanwaltschaft berufen, soweit nicht gesetzlich ein anderes bestimmt ist. Sie ist, soweit nicht gesetzlich ein anderes bestimmt ist, verpflichtet, wegen aller verfolgbaren Straftaten einzuschreiten, sofern zureichende tatsächliche Anhaltspunkte vorliegen." },
+  { gesetz: "Strafprozessordnung (StPO)", nummer: "§ 244", text: "Das Gericht hat zur Erforschung der Wahrheit die Beweisaufnahme von Amts wegen auf alle Tatsachen und Beweismittel zu erstrecken, die für die Entscheidung von Bedeutung sind." },
+  { gesetz: "Zivilprozessordnung (ZPO)", nummer: "§ 253", text: "Die Erhebung der Klage erfolgt durch Zustellung eines Schriftsatzes (Klageschrift). Die Klageschrift muss enthalten: 1. die Bezeichnung der Parteien und des Gerichts; 2. die bestimmte Angabe des Gegenstandes und des Grundes des erhobenen Anspruchs sowie einen bestimmten Antrag." },
+  { gesetz: "Zivilprozessordnung (ZPO)", nummer: "§ 286", text: "Das Gericht hat unter Berücksichtigung des gesamten Inhalts der Verhandlungen und des Ergebnisses einer etwaigen Beweisaufnahme nach freier Überzeugung zu entscheiden, ob eine tatsächliche Behauptung für wahr oder für nicht wahr zu erachten sei." },
+  { gesetz: "Zivilprozessordnung (ZPO)", nummer: "§ 300", text: "Ist der Rechtsstreit zur Endentscheidung reif, so hat das Gericht sie durch Endurteil zu erlassen." },
+  { gesetz: "Handelsgesetzbuch (HGB)", nummer: "§ 1", text: "Kaufmann im Sinne dieses Gesetzbuchs ist, wer ein Handelsgewerbe betreibt." },
+  { gesetz: "Handelsgesetzbuch (HGB)", nummer: "§ 48", text: "Wer von einem Kaufmann ermächtigt ist, für ihn Geschäfte zu betreiben und zu schließen, ist Handlungsbevollmächtigter." },
+  { gesetz: "Handelsgesetzbuch (HGB)", nummer: "§ 49", text: "Die Handlungsvollmacht ermächtigt zu allen Geschäften und Rechtshandlungen, die der Betrieb eines derartigen Handelsgewerbes oder die Vornahme derartiger Geschäfte gewöhnlich mit sich bringt." },
+  { gesetz: "Aktiengesetz (AktG)", nummer: "§ 1", text: "Die Aktiengesellschaft ist eine Gesellschaft mit eigener Rechtspersönlichkeit. Für die Verbindlichkeiten der Gesellschaft haftet den Gläubigern nur das Gesellschaftsvermögen." },
+  { gesetz: "GmbH-Gesetz (GmbHG)", nummer: "§ 1", text: "Gesellschaften mit beschränkter Haftung können nach Maßgabe der Bestimmungen dieses Gesetzes zu jedem gesetzlich zulässigen Zweck durch eine oder mehrere Personen errichtet werden." },
+  { gesetz: "GmbH-Gesetz (GmbHG)", nummer: "§ 13", text: "Die Gesellschaft mit beschränkter Haftung als solche hat selbständig ihre Rechte und Pflichten; sie kann Eigentum und andere dingliche Rechte an Grundstücken erwerben, vor Gericht klagen und verklagt werden." },
+  { gesetz: "Urheberrechtsgesetz (UrhG)", nummer: "§ 1", text: "Die Urheber von Werken der Literatur, Wissenschaft und Kunst genießen für ihre Werke Schutz nach Maßgabe dieses Gesetzes." },
+  { gesetz: "Urheberrechtsgesetz (UrhG)", nummer: "§ 2", text: "Zu den geschützten Werken der Literatur, Wissenschaft und Kunst gehören insbesondere: 1. Sprachwerke, wie Schriftwerke, Reden und Computerprogramme; 2. Werke der Musik; 3. pantomimische Werke einschließlich der Werke der Tanzkunst; 4. Werke der bildenden Künste einschließlich der Werke der Baukunst und der angewandten Kunst und Entwürfe solcher Werke; 5. Lichtbildwerke einschließlich der Werke, die ähnlich wie Lichtbildwerke geschaffen werden; 6. Filmwerke einschließlich der Werke, die ähnlich wie Filmwerke geschaffen werden; 7. Darstellungen wissenschaftlicher oder technischer Art, wie Zeichnungen, Pläne, Karten, Skizzen, Tabellen und plastische Darstellungen." },
+  { gesetz: "Bundesdatenschutzgesetz (BDSG)", nummer: "§ 1", text: "Dieses Gesetz gilt für die Verarbeitung personenbezogener Daten durch öffentliche Stellen des Bundes und durch nichtöffentliche Stellen, soweit sie die Daten im Rahmen der Tätigkeiten einer Niederlassung im Inland verarbeiten." },
+  { gesetz: "Straßenverkehrsgesetz (StVG)", nummer: "§ 1", text: "Kraftfahrzeuge und ihre Anhänger, die auf öffentlichen Straßen in Betrieb gesetzt werden sollen, müssen von der zuständigen Behörde zum Verkehr zugelassen sein." },
+  { gesetz: "Straßenverkehrsordnung (StVO)", nummer: "§ 1", text: "Die Teilnahme am Straßenverkehr erfordert ständige Vorsicht und gegenseitige Rücksicht. Wer am Verkehr teilnimmt, hat sich so zu verhalten, dass kein Anderer geschädigt, gefährdet oder mehr, als nach den Umständen unvermeidbar, behindert oder belästigt wird." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 157", text: "Verträge sind so auszulegen, wie Treu und Glauben mit Rücksicht auf die Verkehrssitte es erfordern." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 164", text: "Eine Willenserklärung, die jemand innerhalb der ihm zustehenden Vertretungsmacht im Namen des Vertretenen abgibt, wirkt unmittelbar für und gegen den Vertretenen." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 276", text: "Der Schuldner hat Vorsatz und Fahrlässigkeit zu vertreten, wenn eine strengere oder mildere Haftung weder bestimmt noch aus dem sonstigen Inhalt des Schuldverhältnisses zu entnehmen ist." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 323", text: "Erbringt bei einem gegenseitigen Vertrag der Schuldner eine fällige Leistung nicht oder nicht vertragsgemäß, so kann der Gläubiger, wenn er dem Schuldner erfolglos eine angemessene Frist zur Leistung oder Nacherfüllung bestimmt hat, vom Vertrag zurücktreten." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 434", text: "Die Sache ist frei von Sachmängeln, wenn sie bei Gefahrübergang den subjektiven Anforderungen, den objektiven Anforderungen und den Montageanforderungen entspricht." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 536", text: "Ist die Mietsache zur Zeit der Überlassung an den Mieter mit einem Mangel behaftet, der ihre Tauglichkeit zum vertragsgemäßen Gebrauch aufhebt, oder entsteht während der Mietzeit ein solcher Mangel, so ist der Mieter für die Zeit, in der die Tauglichkeit aufgehoben ist, von der Entrichtung der Miete befreit." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 812", text: "Wer durch die Leistung eines anderen oder in sonstiger Weise auf dessen Kosten etwas ohne rechtlichen Grund erlangt, ist ihm zur Herausgabe verpflichtet." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 932", text: "Durch eine nach § 929 erfolgte Veräußerung wird der Erwerber auch dann Eigentümer, wenn die Sache nicht dem Veräußerer gehört, es sei denn, dass er zu der Zeit, zu der er nach diesen Vorschriften das Eigentum erwerben würde, nicht in gutem Glauben ist." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 123", text: "Wer in die Wohnung, in die Geschäftsräume oder in das befriedete Besitztum eines anderen oder in abgeschlossene Räume, welche zum öffentlichen Dienst oder Verkehr bestimmt sind, widerrechtlich eindringt, oder wer, wenn er ohne Befugnis darin verweilt, auf die Aufforderung des Berechtigten sich nicht entfernt, wird mit Freiheitsstrafe bis zu einem Jahr oder mit Geldstrafe bestraft." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 142", text: "Ein Unfallbeteiligter, der sich nach einem Unfall im Straßenverkehr vom Unfallort entfernt, bevor er zugunsten der anderen Unfallbeteiligten und der Geschädigten die Feststellung seiner Person, seines Fahrzeugs und der Art seiner Beteiligung durch seine Anwesenheit und durch die Angabe, dass er an dem Unfall beteiligt ist, ermöglicht hat, wird mit Freiheitsstrafe bis zu drei Jahren oder mit Geldstrafe bestraft." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 316", text: "Wer im Verkehr ein Fahrzeug führt, obwohl er infolge des Genusses alkoholischer Getränke oder anderer berauschender Mittel nicht in der Lage ist, das Fahrzeug sicher zu führen, wird mit Freiheitsstrafe bis zu einem Jahr oder mit Geldstrafe bestraft, wenn die Tat nicht in § 315a oder § 315c mit Strafe bedroht ist." },
+  { gesetz: "Grundgesetz (GG)", nummer: "Art. 38 Abs. 1", text: "Die Abgeordneten des Deutschen Bundestages werden in allgemeiner, unmittelbarer, freier, gleicher und geheimer Wahl gewählt. Sie sind Vertreter des ganzen Volkes, an Aufträge und Weisungen nicht gebunden und nur ihrem Gewissen unterworfen." },
+  { gesetz: "Grundgesetz (GG)", nummer: "Art. 92", text: "Die rechtsprechende Gewalt ist den Richtern anvertraut; sie wird durch das Bundesverfassungsgericht, durch die in diesem Grundgesetze vorgesehenen Bundesgerichte und durch die Gerichte der Länder ausgeübt." },
+  { gesetz: "Grundgesetz (GG)", nummer: "Art. 97 Abs. 1", text: "Die Richter sind unabhängig und nur dem Gesetze unterworfen." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 305", text: "Allgemeine Geschäftsbedingungen sind alle für eine Vielzahl von Verträgen vorformulierten Vertragsbedingungen, die eine Vertragspartei (Verwender) der anderen Vertragspartei bei Abschluss eines Vertrags stellt." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 307", text: "Bestimmungen in Allgemeinen Geschäftsbedingungen sind unwirksam, wenn sie den Vertragspartner des Verwenders entgegen den Geboten von Treu und Glauben unangemessen benachteiligen." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 53", text: "Hat jemand mehrere Straftaten begangen, die gleichzeitig abgeurteilt werden, und dadurch mehrere Freiheitsstrafen oder mehrere Geldstrafen verwirkt, so wird auf eine Gesamtstrafe erkannt." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 63", text: "Hat jemand eine rechtswidrige Tat im Zustand der Schuldunfähigkeit (§ 20) oder der verminderten Schuldfähigkeit (§ 21) begangen, so ordnet das Gericht die Unterbringung in einem psychiatrischen Krankenhaus an, wenn die Gesamtwürdigung des Täters und seiner Tat ergibt, dass von ihm infolge seines Zustandes erhebliche rechtswidrige Taten zu erwarten sind und er deshalb für die Allgemeinheit gefährlich ist." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 1922", text: "Mit dem Tode einer Person (Erbfall) geht deren Vermögen (Erbschaft) als Ganzes auf eine oder mehrere andere Personen (Erben) über." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 1931", text: "Der überlebende Ehegatte des Erblassers ist neben Verwandten der ersten Ordnung zu einem Viertel, neben Verwandten der zweiten Ordnung oder neben Großeltern zur Hälfte der Erbschaft als gesetzlicher Erbe berufen." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 2303", text: "Ist ein Abkömmling des Erblassers durch Verfügung von Todes wegen von der Erbfolge ausgeschlossen, so kann er von dem Erben den Pflichtteil verlangen. Der Pflichtteil besteht in der Hälfte des Wertes des gesetzlichen Erbteils." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 13", text: "Verbraucher ist jede natürliche Person, die ein Rechtsgeschäft zu Zwecken abschließt, die überwiegend weder ihrer gewerblichen noch ihrer selbständigen beruflichen Tätigkeit zugerechnet werden können." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 14", text: "Unternehmer ist eine natürliche oder juristische Person oder eine rechtsfähige Personengesellschaft, die bei Abschluss eines Rechtsgeschäfts in Ausübung ihrer gewerblichen oder selbständigen beruflichen Tätigkeit handelt." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 21", text: "Ein Verein, dessen Zweck nicht auf einen wirtschaftlichen Geschäftsbetrieb gerichtet ist, erlangt Rechtsfähigkeit durch Eintragung in das Vereinsregister." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 31", text: "Der Verein ist für den Schaden verantwortlich, den der Vorstand, ein Mitglied des Vorstands oder ein anderer verfassungsmäßig berufener Vertreter durch eine in Ausführung der ihm zustehenden Verrichtungen begangene, zum Schadensersatz verpflichtende Handlung einem Dritten zufügt." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 93", text: "Bestandteile einer Sache, die voneinander nicht getrennt werden können, ohne dass der eine oder der andere zerstört oder in seinem Wesen verändert wird (wesentliche Bestandteile), können nicht Gegenstand besonderer Rechte sein." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 94", text: "Zu den wesentlichen Bestandteilen eines Grundstücks gehören die mit dem Grund und Boden fest verbundenen Sachen, insbesondere Gebäude, sowie die Erzeugnisse des Grundstücks, solange sie mit dem Boden zusammenhängen." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 105", text: "Die Willenserklärung eines Geschäftsunfähigen ist nichtig. Nichtig ist auch eine Willenserklärung, die im Zustand der Bewusstlosigkeit oder vorübergehender Störung der Geistestätigkeit abgegeben wird." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 107", text: "Der Minderjährige bedarf zu einer Willenserklärung, durch die er nicht lediglich einen rechtlichen Vorteil erlangt, der Einwilligung seines gesetzlichen Vertreters." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 116", text: "Eine Willenserklärung ist nicht deshalb nichtig, weil sich der Erklärende insgeheim vorbehält, das Erklärte nicht zu wollen." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 117", text: "Wird eine Willenserklärung, die einem anderen gegenüber abzugeben ist, mit dessen Einverständnis nur zum Schein abgegeben, so ist sie nichtig." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 118", text: "Eine nicht ernstlich gemeinte Willenserklärung, die in der Erwartung abgegeben wird, der Mangel der Ernstlichkeit werde nicht verkannt werden, ist nichtig." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 119", text: "Wer bei der Abgabe einer Willenserklärung über deren Inhalt im Irrtum war oder eine Erklärung dieses Inhalts überhaupt nicht abgeben wollte, kann die Erklärung anfechten, wenn anzunehmen ist, dass er sie bei Kenntnis der Sachlage und bei verständiger Würdigung des Falles nicht abgegeben haben würde." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 123", text: "Wer zur Abgabe einer Willenserklärung durch arglistige Täuschung oder widerrechtlich durch Drohung bestimmt worden ist, kann die Erklärung anfechten." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 125", text: "Ein Rechtsgeschäft, welches der durch Gesetz vorgeschriebenen Form ermangelt, ist nichtig. Der Mangel der durch Rechtsgeschäft bestimmten Form hat im Zweifel gleichfalls Nichtigkeit zur Folge." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 130", text: "Eine Willenserklärung, die einem anderen gegenüber abzugeben ist, wird, wenn sie in dessen Abwesenheit abgegeben wird, in dem Zeitpunkt wirksam, in welchem sie ihm zugeht." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 133", text: "Bei der Auslegung einer Willenserklärung ist der wirkliche Wille zu erforschen und nicht an dem buchstäblichen Sinne des Ausdrucks zu haften." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 146", text: "Der Antrag erlischt, wenn er dem Antragenden gegenüber abgelehnt oder wenn er nicht diesem gegenüber nach den §§ 147 bis 149 rechtzeitig angenommen wird." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 147", text: "Der einem Anwesenden gemachte Antrag kann nur sofort angenommen werden. Dies gilt auch von einem mittels Fernsprechers oder einer sonstigen technischen Einrichtung von Person zu Person gemachten Antrag." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 158", text: "Wird ein Rechtsgeschäft unter einer aufschiebenden Bedingung vorgenommen, so tritt die von der Bedingung abhängig gemachte Wirkung mit dem Eintritt der Bedingung ein." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 164 Abs. 1", text: "Eine Willenserklärung, die jemand innerhalb der ihm zustehenden Vertretungsmacht im Namen des Vertretenen abgibt, wirkt unmittelbar für und gegen den Vertretenen." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 167", text: "Die Erteilung der Vollmacht erfolgt durch Erklärung gegenüber dem zu Bevollmächtigenden oder dem Dritten, dem gegenüber die Vertretung stattfinden soll." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 179", text: "Wer als Vertreter einen Vertrag geschlossen hat, ist, sofern er nicht seine Vertretungsmacht nachweist, dem anderen Teil nach dessen Wahl zur Erfüllung oder zum Schadensersatz verpflichtet, wenn der Vertretene die Genehmigung des Vertrags verweigert." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 194", text: "Das Recht, von einem anderen ein Tun oder Unterlassen zu verlangen (Anspruch), unterliegt der Verjährung." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 199", text: "Die regelmäßige Verjährungsfrist beginnt mit dem Schluss des Jahres, in dem der Anspruch entstanden ist und der Gläubiger von den den Anspruch begründenden Umständen und der Person des Schuldners Kenntnis erlangt oder ohne grobe Fahrlässigkeit erlangen müsste." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 214", text: "Nach Eintritt der Verjährung ist der Schuldner berechtigt, die Leistung zu verweigern." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 226", text: "Die Ausübung eines Rechts ist unzulässig, wenn sie nur den Zweck haben kann, einem anderen Schaden zuzufügen." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 227", text: "Eine durch Notwehr gebotene Handlung ist nicht widerrechtlich. Notwehr ist diejenige Verteidigung, welche erforderlich ist, um einen gegenwärtigen rechtswidrigen Angriff von sich oder einem anderen abzuwenden." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 228", text: "Wer eine fremde Sache beschädigt oder zerstört, um eine durch sie drohende Gefahr von sich oder einem anderen abzuwenden, handelt nicht widerrechtlich, wenn die Beschädigung oder die Zerstörung zur Abwendung der Gefahr erforderlich ist und der Schaden nicht außer Verhältnis zu der Gefahr steht." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 229", text: "Wer zum Zwecke der Selbsthilfe eine Sache wegnimmt, zerstört oder beschädigt oder wer zum Zwecke der Selbsthilfe einen Verpflichteten, welcher der Flucht verdächtig ist, festnimmt oder den Widerstand des Verpflichteten gegen eine Handlung, die dieser zu dulden verpflichtet ist, beseitigt, handelt nicht widerrechtlich, wenn obrigkeitliche Hilfe nicht rechtzeitig zu erlangen ist und ohne sofortiges Eingreifen die Gefahr besteht, dass die Verwirklichung des Anspruchs vereitelt oder wesentlich erschwert werde." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 241a", text: "Durch die Lieferung unbestellter Sachen oder durch die Erbringung unbestellter sonstiger Leistungen durch einen Unternehmer an einen Verbraucher wird ein Anspruch gegen diesen nicht begründet." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 275", text: "Der Anspruch auf Leistung ist ausgeschlossen, soweit diese für den Schuldner oder für jedermann unmöglich ist." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 281", text: "Soweit der Schuldner die fällige Leistung nicht oder nicht wie geschuldet erbringt, kann der Gläubiger unter den Voraussetzungen des § 280 Abs. 1 Schadensersatz statt der Leistung verlangen, wenn er dem Schuldner erfolglos eine angemessene Frist zur Leistung oder Nacherfüllung bestimmt hat." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 286", text: "Leistet der Schuldner auf eine Mahnung des Gläubigers nicht, die nach dem Eintritt der Fälligkeit erfolgt, so kommt er durch die Mahnung in Verzug. Der Mahnung stehen die Erhebung der Klage auf die Leistung sowie die Zustellung eines Mahnbescheids im Mahnverfahren gleich." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 288", text: "Eine Geldschuld ist während des Verzugs zu verzinsen. Der Verzugszinssatz beträgt für das Jahr fünf Prozentpunkte über dem Basiszinssatz." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 311 Abs. 2", text: "Ein Schuldverhältnis mit Pflichten nach § 241 Abs. 2 entsteht auch durch die Aufnahme von Vertragsverhandlungen, die Anbahnung eines Vertrags oder ähnliche geschäftliche Kontakte." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 313", text: "Haben sich Umstände, die zur Grundlage des Vertrags geworden sind, nach Vertragsschluss schwerwiegend verändert und hätten die Parteien den Vertrag nicht oder mit anderem Inhalt geschlossen, wenn sie diese Veränderung vorausgesehen hätten, so kann Anpassung des Vertrags verlangt werden, soweit einem Teil unter Berücksichtigung aller Umstände des Einzelfalls, insbesondere der vertraglichen oder gesetzlichen Risikoverteilung, das Festhalten am unveränderten Vertrag nicht zugemutet werden kann." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 314", text: "Dauerschuldverhältnisse kann jeder Vertragsteil aus wichtigem Grund ohne Einhaltung einer Kündigungsfrist kündigen. Ein wichtiger Grund liegt vor, wenn dem kündigenden Teil unter Berücksichtigung aller Umstände des Einzelfalls und unter Abwägung der beiderseitigen Interessen die Fortsetzung des Vertragsverhältnisses nicht zugemutet werden kann." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 323 Abs. 1", text: "Erbringt bei einem gegenseitigen Vertrag der Schuldner eine fällige Leistung nicht oder nicht vertragsgemäß, so kann der Gläubiger, wenn er dem Schuldner erfolglos eine angemessene Frist zur Leistung oder Nacherfüllung bestimmt hat, vom Vertrag zurücktreten." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 346", text: "Hat sich eine Vertragspartei vertraglich den Rücktritt vorbehalten oder steht ihr ein gesetzliches Rücktrittsrecht zu, so sind im Falle des Rücktritts die empfangenen Leistungen zurückzugewähren und die gezogenen Nutzungen herauszugeben." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 434 Abs. 1", text: "Die Sache ist frei von Sachmängeln, wenn sie bei Gefahrübergang den subjektiven Anforderungen, den objektiven Anforderungen und den Montageanforderungen entspricht." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 437", text: "Ist die Sache mangelhaft, kann der Käufer, wenn die Voraussetzungen der folgenden Vorschriften vorliegen und soweit nicht ein anderes bestimmt ist, 1. nach § 439 Nacherfüllung verlangen, 2. nach den §§ 440, 323 und 326 Abs. 5 von dem Vertrag zurücktreten oder nach § 441 den Kaufpreis mindern und 3. nach den §§ 440, 280, 281, 283 und 311a Schadensersatz oder nach § 284 Ersatz vergeblicher Aufwendungen verlangen." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 439", text: "Der Käufer kann als Nacherfüllung nach seiner Wahl die Beseitigung des Mangels oder die Lieferung einer mangelfreien Sache verlangen." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 536 Abs. 1", text: "Ist die Mietsache zur Zeit der Überlassung an den Mieter mit einem Mangel behaftet, der ihre Tauglichkeit zum vertragsgemäßen Gebrauch aufhebt, oder entsteht während der Mietzeit ein solcher Mangel, so ist der Mieter für die Zeit, in der die Tauglichkeit aufgehoben ist, von der Entrichtung der Miete befreit." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 543", text: "Jede Vertragspartei kann das Mietverhältnis aus wichtigem Grund außerordentlich fristlos kündigen. Ein wichtiger Grund liegt vor, wenn dem Kündigenden unter Berücksichtigung aller Umstände des Einzelfalls und unter Abwägung der beiderseitigen Interessen die Fortsetzung des Mietverhältnisses bis zum Ablauf der Kündigungsfrist nicht zugemutet werden kann." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 550", text: "Wird der Mietvertrag für längere Zeit als ein Jahr nicht in schriftlicher Form geschlossen, so gilt er für unbestimmte Zeit." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 556", text: "Die Vertragsparteien können vereinbaren, dass der Mieter Betriebskosten trägt. Betriebskosten sind die Kosten, die dem Eigentümer oder Erbbauberechtigten durch das Eigentum oder das Erbbaurecht am Grundstück oder durch den bestimmungsmäßigen Gebrauch des Gebäudes, der Nebengebäude, Anlagen, Einrichtungen und des Grundstücks laufend entstehen." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 573", text: "Der Vermieter kann nur kündigen, wenn er ein berechtigtes Interesse an der Beendigung des Mietverhältnisses hat. Ein berechtigtes Interesse des Vermieters an der Beendigung des Mietverhältnisses liegt insbesondere vor, wenn der Mieter seine vertraglichen Pflichten schuldhaft nicht unerheblich verletzt hat, der Vermieter die Räume als Wohnung für sich, seine Familienangehörigen oder Angehörige seines Haushalts benötigt oder der Vermieter durch die Fortsetzung des Mietverhältnisses an einer angemessenen wirtschaftlichen Verwertung des Grundstücks gehindert und dadurch erhebliche Nachteile erleiden würde." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 812 Abs. 1", text: "Wer durch die Leistung eines anderen oder in sonstiger Weise auf dessen Kosten etwas ohne rechtlichen Grund erlangt, ist ihm zur Herausgabe verpflichtet. Diese Verpflichtung besteht auch dann, wenn der rechtliche Grund später wegfällt oder der mit einer Leistung nach dem Inhalt des Rechtsgeschäfts bezweckte Erfolg nicht eintritt." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 816", text: "Trifft ein Nichtberechtigter über einen Gegenstand eine Verfügung, die dem Berechtigten gegenüber wirksam ist, so ist er dem Berechtigten zur Herausgabe des durch die Verfügung Erlangten verpflichtet. Wird die Verfügung unentgeltlich getroffen, so trifft die gleiche Verpflichtung denjenigen, welcher auf Grund der Verfügung unmittelbar einen rechtlichen Vorteil erlangt." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 818", text: "Die Verpflichtung zur Herausgabe erstreckt sich auf die gezogenen Nutzungen sowie auf dasjenige, was der Empfänger auf Grund eines erlangten Rechts oder als Ersatz für die Zerstörung, Beschädigung oder Entziehung des erlangten Gegenstands erwirbt." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 823 Abs. 2", text: "Die gleiche Verpflichtung trifft denjenigen, welcher gegen ein den Schutz eines anderen bezweckendes Gesetz verstößt. Ist nach dem Inhalt des Gesetzes ein Verstoß gegen dieses auch ohne Verschulden möglich, so tritt die Ersatzpflicht nur im Falle des Verschuldens ein." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 826", text: "Wer in einer gegen die guten Sitten verstoßenden Weise einem anderen vorsätzlich Schaden zufügt, ist dem anderen zum Ersatz des Schadens verpflichtet." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 831", text: "Wer einen anderen zu einer Verrichtung bestellt, ist zum Ersatz des Schadens verpflichtet, den der andere in Ausführung der Verrichtung einem Dritten widerrechtlich zufügt. Die Ersatzpflicht tritt nicht ein, wenn der Geschäftsherr bei der Auswahl der bestellten Person und, sofern er Vorrichtungen oder Gerätschaften zu beschaffen oder die Ausführung der Verrichtung zu leiten hat, bei der Beschaffung oder der Leitung die im Verkehr erforderliche Sorgfalt beobachtet oder wenn der Schaden auch bei Anwendung dieser Sorgfalt entstanden sein würde." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 858", text: "Wer dem Besitzer ohne dessen Willen den Besitz entzieht oder ihn im Besitz stört, handelt, sofern nicht das Gesetz die Entziehung oder die Störung gestattet, widerrechtlich (verbotene Eigenmacht)." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 861", text: "Wird der Besitz durch verbotene Eigenmacht dem Besitzer entzogen, so kann dieser die Wiedereinräumung des Besitzes von demjenigen verlangen, welcher ihm gegenüber fehlerhaft besitzt." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 903", text: "Der Eigentümer einer Sache kann, soweit nicht das Gesetz oder Rechte Dritter entgegenstehen, mit der Sache nach Belieben verfahren und andere von jeder Einwirkung ausschließen." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 904", text: "Der Eigentümer einer Sache ist nicht berechtigt, die Einwirkung eines anderen auf die Sache zu verbieten, wenn die Einwirkung zur Abwendung einer gegenwärtigen Gefahr notwendig und der drohende Schaden gegenüber dem aus der Einwirkung dem Eigentümer entstehenden Schaden unverhältnismäßig groß ist." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 906", text: "Der Eigentümer eines Grundstücks kann die Zuführung von Gasen, Dämpfen, Gerüchen, Rauch, Ruß, Wärme, Geräusch, Erschütterungen und ähnliche von einem anderen Grundstück ausgehende Einwirkungen insoweit nicht verbieten, als die Einwirkung die Benutzung seines Grundstücks nicht oder nur unwesentlich beeinträchtigt." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 929 S. 1", text: "Zur Übertragung des Eigentums an einer beweglichen Sache ist erforderlich, dass der Eigentümer die Sache dem Erwerber übergibt und beide darüber einig sind, dass das Eigentum übergehen soll." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 932", text: "Durch eine nach § 929 erfolgte Veräußerung wird der Erwerber auch dann Eigentümer, wenn die Sache nicht dem Veräußerer gehört, es sei denn, dass er zu der Zeit, zu der er nach diesen Vorschriften das Eigentum erwerben würde, nicht in gutem Glauben ist." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 935", text: "Der Erwerb des Eigentums auf Grund der §§ 932 bis 934 tritt nicht ein, wenn die Sache dem Eigentümer gestohlen worden, verloren gegangen oder sonst abhanden gekommen war." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 946", text: "Wird eine bewegliche Sache mit einem Grundstück dergestalt verbunden, dass sie wesentlicher Bestandteil des Grundstücks wird, so erstreckt sich das Eigentum an dem Grundstück auf diese Sache." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 985", text: "Der Eigentümer kann von dem Besitzer die Herausgabe der Sache verlangen." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 986", text: "Der Besitzer kann die Herausgabe der Sache verweigern, wenn er oder der mittelbare Besitzer, von dem er sein Recht zum Besitz ableitet, dem Eigentümer gegenüber zum Besitz berechtigt ist." },
+  { gesetz: "Bürgerliches Gesetzbuch (BGB)", nummer: "§ 1004", text: "Wird das Eigentum in anderer Weise als durch Entziehung oder Vorenthaltung des Besitzes beeinträchtigt, so kann der Eigentümer von dem Störer die Beseitigung der Beeinträchtigung verlangen. Sind weitere Beeinträchtigungen zu besorgen, so kann der Eigentümer auf Unterlassung klagen." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 46 Abs. 1", text: "Die Schuld des Täters ist Grundlage für die Zumessung der Strafe. Die Wirkungen, die von der Strafe für das künftige Leben des Täters in der Gesellschaft zu erwarten sind, sind zu berücksichtigen." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 47", text: "Eine Freiheitsstrafe unter sechs Monaten verhängt das Gericht nur, wenn besondere Umstände, die in der Tat oder der Persönlichkeit des Täters liegen, die Verhängung einer Freiheitsstrafe zur Einwirkung auf den Täter oder zur Verteidigung der Rechtsordnung unerlässlich machen." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 49", text: "Ist eine Milderung nach dieser Vorschrift vorgeschrieben oder zugelassen, so gilt für die Milderung folgendes: An die Stelle von lebenslanger Freiheitsstrafe tritt Freiheitsstrafe nicht unter drei Jahren. Bei zeitiger Freiheitsstrafe darf höchstens auf drei Viertel des angedrohten Höchstmaßes erkannt werden." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 52", text: "Verletzt dieselbe Handlung mehrere Strafgesetze oder dasselbe Strafgesetz mehrmals, so wird nur auf eine Strafe erkannt." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 53", text: "Hat jemand mehrere Straftaten begangen, die gleichzeitig abgeurteilt werden, und dadurch mehrere Freiheitsstrafen oder mehrere Geldstrafen verwirkt, so wird auf eine Gesamtstrafe erkannt." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 57", text: "Das Gericht setzt die Vollstreckung des Restes einer zeitigen Freiheitsstrafe zur Bewährung aus, wenn zwei Drittel der verhängten Strafe, mindestens jedoch zwei Monate, verbüßt sind und dies unter Berücksichtigung des Sicherheitsinteresses der Allgemeinheit verantwortet werden kann." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 69", text: "Wird jemand wegen einer rechtswidrigen Tat, die er bei oder im Zusammenhang mit dem Führen eines Kraftfahrzeugs oder unter Verletzung der Pflichten eines Kraftfahrzeugführers begangen hat, verurteilt oder nur deshalb nicht verurteilt, weil seine Schuldunfähigkeit erwiesen oder nicht auszuschließen ist, so entzieht ihm das Gericht die Fahrerlaubnis, wenn sich aus der Tat ergibt, dass er zum Führen von Kraftfahrzeugen ungeeignet ist." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 111", text: "Wer öffentlich, in einer Versammlung oder durch Verbreiten eines Inhalts (§ 11 Abs. 3) zu einer rechtswidrigen Tat auffordert, wird wie ein Anstifter bestraft." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 113", text: "Wer einem Amtsträger oder Soldaten der Bundeswehr, der zur Vollstreckung von Gesetzen, Rechtsverordnungen, Urteilen, Gerichtsbeschlüssen oder Verfügungen berufen ist, bei der Vornahme einer solchen Diensthandlung mit Gewalt oder durch Drohung mit Gewalt Widerstand leistet oder ihn dabei tätlich angreift, wird mit Freiheitsstrafe bis zu drei Jahren oder mit Geldstrafe bestraft." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 123", text: "Wer in die Wohnung, in die Geschäftsräume oder in das befriedete Besitztum eines anderen oder in abgeschlossene Räume, welche zum öffentlichen Dienst oder Verkehr bestimmt sind, widerrechtlich eindringt, oder wer, wenn er ohne Befugnis darin verweilt, auf die Aufforderung des Berechtigten sich nicht entfernt, wird mit Freiheitsstrafe bis zu einem Jahr oder mit Geldstrafe bestraft." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 125", text: "Wer sich an Gewalttätigkeiten gegen Menschen oder Sachen oder Bedrohungen von Menschen mit einer Gewalttätigkeit beteiligt, die aus einer Menschenmenge in einer die öffentliche Sicherheit gefährdenden Weise mit vereinten Kräften begangen werden, oder wer auf die Menschenmenge einwirkt, um ihre Bereitschaft zu solchen Handlungen zu fördern, wird mit Freiheitsstrafe bis zu drei Jahren oder mit Geldstrafe bestraft." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 130", text: "Wer in einer Weise, die geeignet ist, den öffentlichen Frieden zu stören, zum Hass gegen eine nationale, rassische, religiöse oder durch ihre ethnische Herkunft bestimmte Gruppe, gegen Teile der Bevölkerung oder gegen einen Einzelnen wegen seiner Zugehörigkeit zu einer vorbezeichneten Gruppe oder zu einem Teil der Bevölkerung aufstachelt oder zu Gewalt- oder Willkürmaßnahmen gegen sie auffordert, wird mit Freiheitsstrafe von drei Monaten bis zu fünf Jahren bestraft." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 132", text: "Wer unbefugt ein Amt ausübt oder eine Handlung vornimmt, welche nur kraft eines öffentlichen Amtes vorgenommen werden darf, wird mit Freiheitsstrafe bis zu zwei Jahren oder mit Geldstrafe bestraft." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 142", text: "Ein Unfallbeteiligter, der sich nach einem Unfall im Straßenverkehr vom Unfallort entfernt, bevor er zugunsten der anderen Unfallbeteiligten und der Geschädigten die Feststellung seiner Person, seines Fahrzeugs und der Art seiner Beteiligung durch seine Anwesenheit und durch die Angabe, dass er an dem Unfall beteiligt ist, ermöglicht hat, wird mit Freiheitsstrafe bis zu drei Jahren oder mit Geldstrafe bestraft." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 145", text: "Wer absichtlich oder wissentlich Notrufe oder Notzeichen mißbraucht oder vortäuscht, dass wegen eines Unglücksfalles oder wegen gemeiner Gefahr oder Not die Hilfe anderer erforderlich sei, wird mit Freiheitsstrafe bis zu einem Jahr oder mit Geldstrafe bestraft." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 164", text: "Wer einen anderen bei einer Behörde oder einem zur Entgegennahme von Anzeigen zuständigen Amtsträger oder militärischen Vorgesetzten oder öffentlich wider besseres Wissen einer rechtswidrigen Tat oder der Verletzung einer Dienstpflicht in der Absicht verdächtigt, ein behördliches Verfahren oder andere behördliche Maßnahmen gegen ihn herbeizuführen oder fortdauern zu lassen, wird mit Freiheitsstrafe bis zu fünf Jahren oder mit Geldstrafe bestraft." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 168", text: "Wer unbefugt aus dem Gewahrsam des Berechtigten den Körper oder Teile des Körpers eines verstorbenen Menschen, eine tote Leibesfrucht, Teile einer solchen oder die Asche eines verstorbenen Menschen wegnimmt oder wer daran beschimpfenden Unfug verübt, wird mit Freiheitsstrafe bis zu drei Jahren oder mit Geldstrafe bestraft." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 201", text: "Wer unbefugt das nichtöffentlich gesprochene Wort eines anderen auf einen Tonträger aufnimmt oder eine so hergestellte Aufnahme gebraucht oder einem Dritten zugänglich macht, wird mit Freiheitsstrafe bis zu drei Jahren oder mit Geldstrafe bestraft." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 202", text: "Wer unbefugt einen verschlossenen Brief oder ein anderes verschlossenes Schriftstück, die nicht zu seiner Kenntnis bestimmt sind, öffnet oder sich vom Inhalt eines solchen Schriftstücks ohne Öffnung des Verschlusses unter Anwendung technischer Mittel Kenntnis verschafft, wird mit Freiheitsstrafe bis zu einem Jahr oder mit Geldstrafe bestraft." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 203", text: "Wer unbefugt ein fremdes Geheimnis, namentlich ein zum persönlichen Lebensbereich gehörendes Geheimnis oder ein Betriebs- oder Geschäftsgeheimnis, offenbart, das ihm als Arzt, Zahnarzt, Apotheker oder Angehörigen eines anderen Heilberufs anvertraut worden oder sonst bekanntgeworden ist, wird mit Freiheitsstrafe bis zu einem Jahr oder mit Geldstrafe bestraft." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 222", text: "Wer durch Fahrlässigkeit den Tod eines Menschen verursacht, wird mit Freiheitsstrafe bis zu fünf Jahren oder mit Geldstrafe bestraft." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 226", text: "Hat die Körperverletzung zur Folge, dass die verletzte Person das Sehvermögen auf einem Auge oder beiden Augen, das Gehör, das Sprechvermögen oder die Fortpflanzungsfähigkeit verliert, ein wichtiges Glied des Körpers verliert oder dauernd nicht mehr gebrauchen kann oder in erheblicher Weise dauernd entstellt wird oder in Siechtum, Lähmung oder geistige Krankheit oder Behinderung verfällt, so ist die Strafe Freiheitsstrafe von einem Jahr bis zu zehn Jahren." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 229", text: "Wer durch Fahrlässigkeit die Körperverletzung einer anderen Person verursacht, wird mit Freiheitsstrafe bis zu drei Jahren oder mit Geldstrafe bestraft." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 239", text: "Wer einen Menschen einsperrt oder auf andere Weise der Freiheit beraubt, wird mit Freiheitsstrafe bis zu fünf Jahren oder mit Geldstrafe bestraft." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 240", text: "Wer einen Menschen rechtswidrig mit Gewalt oder durch Drohung mit einem empfindlichen Übel zu einer Handlung, Duldung oder Unterlassung nötigt, wird mit Freiheitsstrafe bis zu drei Jahren oder mit Geldstrafe bestraft." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 244", text: "Mit Freiheitsstrafe von sechs Monaten bis zu zehn Jahren wird bestraft, wer den Diebstahl begeht, indem er oder ein anderer Beteiligter eine Waffe oder ein anderes gefährliches Werkzeug bei sich führt, sonst ein Werkzeug oder Mittel bei sich führt, um den Widerstand einer anderen Person durch Gewalt oder Drohung mit Gewalt zu verhindern oder zu überwinden, oder als Mitglied einer Bande, die sich zur fortgesetzten Begehung von Raub oder Diebstahl verbunden hat, unter Mitwirkung eines anderen Bandenmitglieds stiehlt." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 248a", text: "In den Fällen der §§ 242 und 246 wird die Tat nur auf Antrag verfolgt, wenn der gestohlene Gegenstand von geringem Wert ist." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 250", text: "Auf Freiheitsstrafe nicht unter drei Jahren ist zu erkennen, wenn der Täter oder ein anderer Beteiligter bei dem Raub eine Waffe oder ein anderes gefährliches Werkzeug bei sich führt, sonst ein Werkzeug oder Mittel bei sich führt, um den Widerstand einer anderen Person durch Gewalt oder Drohung mit Gewalt zu verhindern oder zu überwinden, durch die Tat einen anderen in die Gefahr des Todes oder einer schweren Gesundheitsschädigung bringt oder die Tat als Mitglied einer Bande, die sich zur fortgesetzten Begehung von Raub oder Diebstahl verbunden hat, unter Mitwirkung eines anderen Bandenmitglieds begeht." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 252", text: "Wer, bei einem Diebstahl auf frischer Tat betroffen, gegen eine Person Gewalt verübt oder Drohungen mit gegenwärtiger Gefahr für Leib oder Leben anwendet, um sich im Besitz des gestohlenen Gutes zu erhalten, ist gleich einem Räuber zu bestrafen." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 259", text: "Wer eine Sache, die ein anderer gestohlen oder sonst durch eine gegen fremdes Vermögen gerichtete rechtswidrige Tat erlangt hat, ankauft oder sonst sich oder einem Dritten verschafft, sie absetzt oder absetzen hilft, um sich oder einen Dritten zu bereichern, wird mit Freiheitsstrafe bis zu fünf Jahren oder mit Geldstrafe bestraft." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 266", text: "Wer die ihm durch Gesetz, behördlichen Auftrag oder Rechtsgeschäft eingeräumte Befugnis, über fremdes Vermögen zu verfügen oder einen anderen zu verpflichten, missbraucht oder die ihm kraft Gesetzes, behördlichen Auftrags, Rechtsgeschäfts oder eines Treueverhältnisses obliegende Pflicht, fremde Vermögensinteressen wahrzunehmen, verletzt und dadurch dem, dessen Vermögensinteressen er zu betreuen hat, Nachteil zufügt, wird mit Freiheitsstrafe bis zu fünf Jahren oder mit Geldstrafe bestraft." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 268", text: "Wer zur Täuschung im Rechtsverkehr eine technische Aufzeichnung verfälscht oder eine verfälschte technische Aufzeichnung gebraucht, wird mit Freiheitsstrafe bis zu fünf Jahren oder mit Geldstrafe bestraft." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 274", text: "Mit Freiheitsstrafe bis zu fünf Jahren oder mit Geldstrafe wird bestraft, wer eine Urkunde, die ihm entweder überhaupt nicht oder nicht ausschließlich gehört, in der Absicht, einem anderen Nachteil zuzufügen, vernichtet, beschädigt oder unterdrückt, oder wer einen Grenzstein oder ein anderes zur Bezeichnung einer Grenze oder eines Wasserstands bestimmtes Merkmal in der Absicht, einem anderen Nachteil zuzufügen, wegnimmt, vernichtet, unkenntlich macht, verrückt oder fälschlich setzt." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 283", text: "Mit Freiheitsstrafe bis zu fünf Jahren oder mit Geldstrafe wird bestraft, wer bei Überschuldung oder bei drohender oder eingetretener Zahlungsunfähigkeit Bestandteile seines Vermögens, die im Falle der Eröffnung des Insolvenzverfahrens zur Insolvenzmasse gehören, beiseite schafft oder verheimlicht oder in einer den Anforderungen einer ordnungsgemäßen Wirtschaft widersprechenden Weise zerstört, beschädigt oder unbrauchbar macht." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 303a", text: "Wer rechtswidrig Daten löscht, unterdrückt, unbrauchbar macht oder verändert, wird mit Freiheitsstrafe bis zu zwei Jahren oder mit Geldstrafe bestraft." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 303b", text: "Wer eine Datenverarbeitung, die für einen anderen von wesentlicher Bedeutung ist, dadurch erheblich stört, dass er eine Tat nach § 303a Abs. 1 begeht, Daten in der Absicht, einem anderen Nachteil zuzufügen, eingibt oder übermittelt oder eine Datenverarbeitungsanlage oder einen Datenträger zerstört, beschädigt, unbrauchbar macht, beseitigt oder verändert, wird mit Freiheitsstrafe bis zu drei Jahren oder mit Geldstrafe bestraft." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 306", text: "Wer fremde Gebäude oder Hütten, Betriebsstätten oder technische Einrichtungen, Warenlager oder -vorräte, Kraftfahrzeuge, Schienen-, Luft- oder Wasserfahrzeuge, Wälder, Heiden oder Moore oder land-, ernährungs- oder forstwirtschaftliche Anlagen oder Erzeugnisse in Brand setzt oder durch eine Brandlegung ganz oder teilweise zerstört, wird mit Freiheitsstrafe von einem Jahr bis zu zehn Jahren bestraft." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 315b", text: "Wer die Sicherheit des Straßenverkehrs dadurch beeinträchtigt, dass er Anlagen oder Fahrzeuge zerstört, beschädigt oder beseitigt, Hindernisse bereitet oder einen ähnlichen, ebenso gefährlichen Eingriff vornimmt, und dadurch Leib oder Leben eines anderen Menschen oder fremde Sachen von bedeutendem Wert gefährdet, wird mit Freiheitsstrafe bis zu fünf Jahren oder mit Geldstrafe bestraft." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 323a", text: "Wer sich vorsätzlich oder fahrlässig durch alkoholische Getränke oder andere berauschende Mittel in einen Rausch versetzt, wird mit Freiheitsstrafe bis zu fünf Jahren oder mit Geldstrafe bestraft, wenn er in diesem Zustand eine rechtswidrige Tat begeht und ihretwegen nicht bestraft werden kann, weil er infolge des Rausches schuldunfähig war oder weil dies nicht auszuschließen ist." },
+  { gesetz: "Strafgesetzbuch (StGB)", nummer: "§ 323c", text: "Wer bei Unglücksfällen oder gemeiner Gefahr oder Not nicht Hilfe leistet, obwohl dies erforderlich und ihm den Umständen nach zuzumuten, insbesondere ohne erhebliche eigene Gefahr und ohne Verletzung anderer wichtiger Pflichten möglich ist, wird mit Freiheitsstrafe bis zu einem Jahr oder mit Geldstrafe bestraft." },
+  { gesetz: "Strafprozessordnung (StPO)", nummer: "§ 112", text: "Die Untersuchungshaft darf gegen den Beschuldigten angeordnet werden, wenn er der Tat dringend verdächtig ist und ein Haftgrund besteht. Ein Haftgrund besteht, wenn aufgrund bestimmter Tatsachen festgestellt wird, dass der Beschuldigte flüchtig ist oder sich verborgen hält, Fluchtgefahr besteht oder die Gefahr besteht, dass der Beschuldigte die Ermittlungen in unlauterer Weise erschweren wird." },
+  { gesetz: "Strafprozessordnung (StPO)", nummer: "§ 163", text: "Die Behörden und Beamten des Polizeidienstes haben Straftaten zu erforschen und alle keinen Aufschub gestattenden Anordnungen zu treffen, um die Verdunkelung der Sache zu verhüten." },
+  { gesetz: "Zivilprozessordnung (ZPO)", nummer: "§ 91", text: "Die unterliegende Partei hat die Kosten des Rechtsstreits zu tragen, insbesondere die dem Gegner erwachsenen Kosten zu erstatten, soweit sie zur zweckentsprechenden Rechtsverfolgung oder Rechtsverteidigung notwendig waren." },
+  { gesetz: "Zivilprozessordnung (ZPO)", nummer: "§ 138", text: "Die Parteien haben ihre Erklärungen über tatsächliche Umstände vollständig und der Wahrheit gemäß abzugeben." },
+  { gesetz: "Zivilprozessordnung (ZPO)", nummer: "§ 331", text: "Beantragt der Kläger gegen den im Termin zur mündlichen Verhandlung nicht erschienenen Beklagten das Versäumnisurteil, so ist das tatsächliche mündliche Vorbringen des Klägers als zugestanden anzunehmen. Soweit es den Klageantrag rechtfertigt, ist nach dem Antrag zu erkennen." },
+  { gesetz: "Grundgesetz (GG)", nummer: "Art. 6 Abs. 2", text: "Pflege und Erziehung der Kinder sind das natürliche Recht der Eltern und die zuvörderst ihnen obliegende Pflicht. Über ihre Betätigung wacht die staatliche Gemeinschaft." },
+  { gesetz: "Grundgesetz (GG)", nummer: "Art. 7 Abs. 1", text: "Das gesamte Schulwesen steht unter der Aufsicht des Staates." },
+  { gesetz: "Grundgesetz (GG)", nummer: "Art. 9 Abs. 1", text: "Alle Deutschen haben das Recht, Vereine und Gesellschaften zu bilden." },
+  { gesetz: "Grundgesetz (GG)", nummer: "Art. 16 Abs. 1", text: "Die deutsche Staatsangehörigkeit darf nicht entzogen werden. Der Verlust der Staatsangehörigkeit darf nur auf Grund eines Gesetzes und gegen den Willen des Betroffenen nur dann eintreten, wenn der Betroffene dadurch nicht staatenlos wird." },
+  { gesetz: "Grundgesetz (GG)", nummer: "Art. 17", text: "Jedermann hat das Recht, sich einzeln oder in Gemeinschaft mit anderen schriftlich mit Bitten oder Beschwerden an die zuständigen Stellen und an die Volksvertretung zu wenden." },
+  { gesetz: "Grundgesetz (GG)", nummer: "Art. 33 Abs. 2", text: "Jeder Deutsche hat nach seiner Eignung, Befähigung und fachlichen Leistung gleichen Zugang zu jedem öffentlichen Amte." },
+  { gesetz: "Grundgesetz (GG)", nummer: "Art. 34", text: "Verletzt jemand in Ausübung eines ihm anvertrauten öffentlichen Amtes die ihm einem Dritten gegenüber obliegende Amtspflicht, so trifft die Verantwortlichkeit grundsätzlich den Staat oder die Körperschaft, in deren Dienst er steht." },
+  { gesetz: "Grundgesetz (GG)", nummer: "Art. 101 Abs. 1", text: "Ausnahmegerichte sind unzulässig. Niemand darf seinem gesetzlichen Richter entzogen werden." },
+  { gesetz: "Grundgesetz (GG)", nummer: "Art. 103 Abs. 1", text: "Vor Gericht hat jedermann Anspruch auf rechtliches Gehör." },
+  { gesetz: "Grundgesetz (GG)", nummer: "Art. 103 Abs. 2", text: "Eine Tat kann nur bestraft werden, wenn die Strafbarkeit gesetzlich bestimmt war, bevor die Tat begangen wurde." },
+  { gesetz: "Grundgesetz (GG)", nummer: "Art. 104", text: "Die Freiheit der Person kann nur auf Grund eines förmlichen Gesetzes und nur unter Beachtung der darin vorgeschriebenen Formen beschränkt werden. Festgehaltene Personen dürfen weder seelisch noch körperlich misshandelt werden." }
+];
+
+function showRandom() {
+  const p = paragraphen[Math.floor(Math.random() * paragraphen.length)];
+  document.getElementById('gesetz').textContent = p.gesetz;
+  document.getElementById('nummer').textContent = p.nummer;
+  document.getElementById('text').textContent = p.text;
+  document.getElementById('card').style.animation = 'none';
+  void document.getElementById('card').offsetWidth; // reflow
+  document.getElementById('card').style.animation = 'fadeIn 0.4s ease-out';
+}
+</script>
+</body>
+</html>
